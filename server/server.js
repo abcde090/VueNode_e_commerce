@@ -41,8 +41,17 @@ app.post("/", (req, res) => {
         } else {
             res.json("successfully saved")
         }
-    });
+    }); 
 });
+
+// apis
+const productRoutes = require('./routes/product');
+const categoryRoutes = require('./routes/category');
+const ownerRoutes = require('./routes/owner');
+
+app.use("/api", productRoutes);
+app.use("/api", categoryRoutes);
+app.use("/api", ownerRoutes);
 
 app.listen(3000, (err) => {
     if (err) {
