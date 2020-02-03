@@ -22,16 +22,20 @@
     <div class="a-spacing-large"></div>
     <div class="container-fluid browsing-history">
       <div class="row">
-        <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-6 br bb">
+        <div
+          v-for="(product, index) in products"
+          :key="product._id"
+          class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-6 br bb"
+        >
           <div class="history-box">
             <!-- Product image -->
             <a href="#" class="a-link-normal">
-              <img src="#" class="img-fluid" />
+              <img :src="product.photo" class="img-fluid" />
             </a>
             <!-- Product title -->
             <div class="a-spacing-top-base asin-title">
               <span class="a-text-normal">
-                <div class="p13n-sc-truncated">Product title</div>
+                <div class="p13n-sc-truncated">{{ product.title }}</div>
               </span>
             </div>
             <!-- Product rating -->
@@ -51,7 +55,7 @@
             <!-- Product price -->
             <div class="a-row">
               <span class="a-size-base a-color-price">
-                <span class="p13n-sc-price"> $ 25</span>
+                <span class="p13n-sc-price"> $ {{ product.price }}</span>
               </span>
             </div>
             <!-- Product button -->
@@ -67,7 +71,21 @@
 </template>
 
 <script>
-export default {};
+export default {
+  // async fetch data before page is loaded on the browser, it is good for SEO because data
+  // will be loaded first.
+  async asyncData({ $axios }) {
+    try {
+      let response = await $axios.$get("http://localhost:3000/api/products");
+      console.log(response);
+      return {
+        products: response.products
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
 </script>
 
 <style></style>
