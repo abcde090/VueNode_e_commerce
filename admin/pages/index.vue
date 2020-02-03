@@ -76,7 +76,7 @@ export default {
   // will be loaded first.
   async asyncData({ $axios }) {
     try {
-      let response = await $axios.$get("http://localhost:3000/api/products");
+      let response = await $axios.$get("http://localhost:3001/api/products");
       console.log(response);
       return {
         products: response.products

@@ -12,16 +12,16 @@
               <div class="a-spacing-top-medium">
                 <label>Categoty</label>
                 <select class="a-select-option">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
+                  <option v-for="category in categories" :value="category._id"
+                  :key="category._id"> {{ category.type }} </option>
                 </select>
               </div>
               <!-- Owner -->
               <div class="a-spacing-top-medium">
                 <label>Owner</label>
                 <select class="a-select-option">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
+                    <option v-for="owner in owners" :value="owner._id"
+                  :key="owner._id"> {{ owner.name }} </option>
                 </select>
               </div>
               <!-- Title  -->
@@ -31,7 +31,7 @@
               </div>
               <!-- Price -->
               <div class="a-spacing-top-medium">
-                <label class="margin-bottom: 0px">Title</label>
+                <label class="margin-bottom: 0px">Price</label>
                 <input type="number" class="a-input-text" style="width: 100%" />
               </div>
               <!-- Description -->
@@ -77,13 +77,20 @@ export default {
   async asyncData({ $axios }) {
     try {
       let categories = await $axios.$get(
-        "http://localhost:3000/api/categories"
+        "http://localhost:3001/api/categories"
       );
-      let owners = await $axios.$get("http://localhost:3000/api/categories");
+      let owners = await $axios.$get("http://localhost:3001/api/owners");
+      const [catResponse, ownerResponse] = await Promise.all([
+        categories,
+        owners
+      ])
       return {
-        products: response.products
+        categories: catResponse.categories,
+        owners: ownerResponse.owners
       };
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 </script>

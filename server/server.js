@@ -53,10 +53,10 @@ app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", ownerRoutes);
 
-app.listen(3000, (err) => {
+app.listen(3001, (err) => {
     if (err) {
         console.log(err);
     } else {
-        console.log("Listen on port", 3000);
+        console.log("Listen on port", 3001);
     } 
 });
