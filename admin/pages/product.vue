@@ -11,7 +11,7 @@
               <!-- Category Dropdown -->
               <div class="a-spacing-top-medium">
                 <label>Categoty</label>
-                <select class="a-select-option">
+                <select class="a-select-option" v-model="categoryID">
                   <option v-for="category in categories" :value="category._id"
                   :key="category._id"> {{ category.type }} </option>
                 </select>
@@ -19,7 +19,7 @@
               <!-- Owner -->
               <div class="a-spacing-top-medium">
                 <label>Owner</label>
-                <select class="a-select-option">
+                <select class="a-select-option" v-model="ownerID">
                     <option v-for="owner in owners" :value="owner._id"
                   :key="owner._id"> {{ owner.name }} </option>
                 </select>
@@ -27,12 +27,17 @@
               <!-- Title  -->
               <div class="a-spacing-top-medium">
                 <label class="margin-bottom: 0px">Title</label>
-                <input type="text" class="a-input-text" style="width: 100%" />
+                <input type="text" class="a-input-text" style="width: 100%" v-model="title" />
               </div>
               <!-- Price -->
               <div class="a-spacing-top-medium">
+                <label class="margin-bottom: 0px">Stock</label>
+                <input type="number" class="a-input-text" style="width: 100%" v-model="stockQuantity" />
+              </div>
+              <!-- Stock quantity -->
+              <div class="a-spacing-top-medium">
                 <label class="margin-bottom: 0px">Price</label>
-                <input type="number" class="a-input-text" style="width: 100%" />
+                <input type="number" class="a-input-text" style="width: 100%" v-model="price" />
               </div>
               <!-- Description -->
               <div class="a-spacing-top-medium">
@@ -40,6 +45,7 @@
                 <textarea
                   placeholder="Product description"
                   style="width: 100%"
+                  v-model="description"
                 ></textarea>
               </div>
               <!-- Photo -->
@@ -48,8 +54,8 @@
                 <div class="a-row a-spacing-top-medium">
                   <label class="choosefile-button">
                     <i class="fal fa-plus"></i>
-                    <input type="file" />
-                    <p style="margin-top:-70px">name</p>
+                    <input type="file" @change="onFile" />
+                    <p style="margin-top:-70px">{{ fileName }}</p>
                   </label>
                 </div>
               </div>
@@ -57,7 +63,7 @@
               <div class="a-spacing-top-large">
                 <span class="a-button-register">
                   <span class="a-button-inner">
-                    <span class="a-button-text">Add product</span>
+                    <span class="a-button-text" @click="addProduct">Add product</span>
                   </span>
                 </span>
               </div>
@@ -90,6 +96,42 @@ export default {
       };
     } catch (err) {
       console.log(err);
+    }
+  },
+
+  data() {
+    return {
+      categoryID: null,
+      ownerID: null,
+      title: "",
+      price: 0,
+      description: "",
+      selectedFile: null,
+      fileName: "",
+      stockQuantity: 1,
+    };
+  },
+
+
+  methods: {
+    onFile(event) {
+      this.selectedFile = event.target.files[0];
+      console.log(this.selectedFile);
+      this.fileName = event.target.files[0].name;
+    },
+
+    async addProduct() {
+      let data = new FormData();
+      data.append('title', this.title);
+      data.append('price', this.price);
+      data.append('stockQuantity', this.stockQuantity);
+      data.append('description', this.description);
+      data.append('ownerID', this.ownerID),
+      data.append('categoryID', this.categoryID),
+      data.append('photo', this.selectedFile, this.selectedFile.name);
+
+      let result = await this.$axios.$post('http://localhost:3001/api/products', data);
+      this.$router.push('/');
     }
   }
 };
